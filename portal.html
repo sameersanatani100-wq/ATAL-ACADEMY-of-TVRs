@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TVR's Academy — Student &amp; Faculty Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1C2B39;
+    --paper:#F1ECE0;
+    --paper-2:#E8E1D2;
+    --slate:#3D5A73;
+    --brass:#B8863C;
+    --maroon:#6B2737;
+    --charcoal:#2A2620;
+    --line:#C9BFA8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--charcoal);
+    font-family:'Work Sans', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    color:var(--ink);
+    margin:0;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1000px; margin:0 auto; padding:0 24px;}
+
+  header{background:var(--ink); color:var(--paper);}
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 24px; max-width:1000px; margin:0 auto;
+  }
+  .brand{display:flex; align-items:center; gap:12px; text-decoration:none;}
+  .seal{
+    width:36px;height:36px;border-radius:50%;
+    border:1.5px solid var(--brass);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif; font-size:13px; color:var(--brass); flex-shrink:0;
+  }
+  .brand-name{font-family:'Fraunces', serif; font-size:1.05rem; color:var(--paper); font-weight:600;}
+  .back-link{font-size:0.88rem; color:var(--paper); opacity:0.85; text-decoration:none;}
+  .back-link:hover{opacity:1;}
+
+  .notice{
+    background:var(--paper-2);
+    border-bottom:1px solid var(--line);
+    font-size:0.85rem;
+    color:var(--slate);
+    padding:10px 0;
+    text-align:center;
+  }
+
+  main{padding:48px 0 80px;}
+
+  /* Tabs / login area */
+  .portal-shell{
+    max-width:480px;
+    margin:0 auto;
+  }
+  .tabs{
+    display:flex;
+    border:1px solid var(--line);
+    margin-bottom:0;
+  }
+  .tab{
+    flex:1;
+    padding:13px;
+    background:#fff;
+    border:none;
+    font-family:'Work Sans', sans-serif;
+    font-size:0.95rem;
+    font-weight:600;
+    color:var(--slate);
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+  }
+  .tab.active{color:var(--ink); border-bottom:2px solid var(--brass); background:var(--paper-2);}
+  .panel{
+    border:1px solid var(--line);
+    border-top:none;
+    background:#fff;
+    padding:32px;
+  }
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  h2.form-title{font-size:1.4rem; margin-bottom:6px;}
+  .form-sub{color:var(--slate); font-size:0.88rem; margin-bottom:22px;}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:0.85rem; color:var(--slate); margin-bottom:6px; font-weight:500;}
+  .field input,.field select{
+    width:100%; padding:11px 12px; border:1px solid var(--line);
+    background:#fff; font-family:inherit; font-size:0.95rem; color:var(--charcoal); border-radius:1px;
+  }
+  .field input:focus,.field select:focus{outline:2px solid var(--brass); outline-offset:1px;}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+
+  .btn-primary{
+    background:var(--maroon); color:var(--paper); border:none;
+    padding:13px 22px; font-weight:600; font-size:0.95rem; cursor:pointer;
+    border-radius:2px; width:100%;
+  }
+  .btn-primary:hover{background:#5a2030;}
+  .switch-link{
+    margin-top:16px; text-align:center; font-size:0.88rem; color:var(--slate);
+  }
+  .switch-link button{
+    background:none; border:none; color:var(--maroon); font-weight:600; cursor:pointer;
+    font-size:0.88rem; padding:0; text-decoration:underline;
+  }
+  .hint{
+    margin-top:18px; padding:10px 12px; background:var(--paper-2);
+    border:1px dashed var(--line); font-size:0.8rem; color:var(--slate);
+  }
+  .error-msg{
+    color:var(--maroon); font-size:0.85rem; margin-bottom:14px; display:none;
+  }
+
+  /* Dashboards */
+  .dash-header{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:28px; flex-wrap:wrap; gap:12px;
+  }
+  .dash-header h2{font-size:1.6rem;}
+  .dash-header .who{color:var(--slate); font-size:0.9rem;}
+  .logout-btn{
+    background:none; border:1px solid var(--ink); color:var(--ink);
+    padding:9px 18px; font-size:0.88rem; font-weight:600; cursor:pointer; border-radius:2px;
+  }
+  .logout-btn:hover{background:var(--ink); color:var(--paper);}
+
+  /* Student dashboard card */
+  .detail-card{
+    border:1px solid var(--line); background:#fff; max-width:480px;
+  }
+  .detail-row{
+    display:flex; justify-content:space-between; padding:14px 22px;
+    border-bottom:1px solid var(--line); font-size:0.92rem;
+  }
+  .detail-row:last-child{border-bottom:none;}
+  .detail-row .k{color:var(--slate);}
+  .detail-row .v{font-weight:500; color:var(--charcoal); text-align:right;}
+  .detail-note{margin-top:16px; font-size:0.85rem; color:var(--slate);}
+
+  /* Faculty table */
+  .table-scroll{overflow-x:auto; border:1px solid var(--line); background:#fff;}
+  table{width:100%; border-collapse:collapse; font-size:0.9rem; min-width:760px;}
+  thead th{
+    text-align:left; padding:13px 14px; background:var(--paper-2);
+    border-bottom:1px solid var(--line); color:var(--ink); font-weight:600;
+    font-size:0.82rem;
+  }
+  tbody td{padding:12px 14px; border-bottom:1px solid var(--line); color:var(--charcoal); vertical-align:middle;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#FAF8F2;}
+  td.serial{color:var(--slate); font-family:'Fraunces',serif; width:44px;}
+  td input, td select{
+    width:100%; padding:7px 8px; border:1px solid var(--brass); font-family:inherit; font-size:0.88rem; border-radius:1px;
+  }
+  .row-actions{display:flex; gap:8px; white-space:nowrap;}
+  .icon-btn{
+    border:1px solid var(--line); background:#fff; padding:6px 12px;
+    font-size:0.8rem; font-weight:600; cursor:pointer; border-radius:2px; color:var(--ink);
+  }
+  .icon-btn.save{border-color:var(--brass); color:var(--brass);}
+  .icon-btn.delete{border-color:var(--maroon); color:var(--maroon);}
+  .icon-btn:hover{background:var(--paper-2);}
+  .empty-state{padding:40px 20px; text-align:center; color:var(--slate); font-size:0.92rem;}
+
+  /* Registration image / WhatsApp modal */
+  .modal-overlay{
+    display:none;
+    position:fixed; inset:0;
+    background:rgba(28,43,57,0.55);
+    align-items:center; justify-content:center;
+    padding:20px; z-index:200;
+  }
+  .modal-box{
+    background:#fff; max-width:420px; width:100%;
+    padding:24px; border:1px solid var(--line);
+  }
+  .modal-box img{
+    width:100%; display:block; border:1px solid var(--line); margin-bottom:18px;
+  }
+  .modal-actions{display:flex; flex-direction:column; gap:10px;}
+  .btn-whatsapp{
+    background:#25D366; color:#fff; border:none; padding:12px;
+    font-weight:600; border-radius:2px; cursor:pointer; font-size:0.95rem; font-family:inherit;
+  }
+  .btn-whatsapp:hover{background:#1ebe5b;}
+  .btn-outline{
+    background:none; border:1px solid var(--ink); color:var(--ink); padding:12px;
+    font-weight:600; border-radius:2px; cursor:pointer; font-size:0.95rem; font-family:inherit;
+  }
+  .btn-outline:hover{background:var(--paper-2);}
+  .modal-note{font-size:0.78rem; color:var(--slate); margin-top:14px; text-align:center; line-height:1.5;}
+
+  @media (max-width:600px){
+    .row2{grid-template-columns:1fr;}
+    .panel{padding:24px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="index.html" class="brand">
+      <div class="seal">TVR</div>
+      <div class="brand-name">TVR's Academy</div>
+    </a>
+    <a href="index.html" class="back-link">&larr; Back to main site</a>
+  </div>
+</header>
+<div class="notice">This portal stores data in your browser only — it's a working demo, not connected to a real server or database.</div>
+
+<main class="wrap">
+
+  <!-- LOGIN / REGISTER SHELL -->
+  <div class="portal-shell" id="portalShell">
+    <div class="tabs">
+      <button class="tab active" id="tabBtnStudent" onclick="showTab('student')">Student</button>
+      <button class="tab" id="tabBtnFaculty" onclick="showTab('faculty')">Faculty</button>
+    </div>
+
+    <!-- STUDENT TAB -->
+    <div class="tab-panel active" id="tabStudent">
+      <div class="panel" id="studentLoginPanel">
+        <h2 class="form-title">Student login</h2>
+        <p class="form-sub">Use the email and password you registered with.</p>
+        <div class="error-msg" id="studentLoginError">No account matches that email and password.</div>
+        <form onsubmit="handleStudentLogin(event)">
+          <div class="field">
+            <label for="sLoginEmail">Email</label>
+            <input type="email" id="sLoginEmail" required>
+          </div>
+          <div class="field">
+            <label for="sLoginPass">Password</label>
+            <input type="password" id="sLoginPass" required>
+          </div>
+          <button type="submit" class="btn-primary">Log in</button>
+        </form>
+        <div class="switch-link">New here? <button onclick="toggleStudentView('register')">Register as a student</button></div>
+      </div>
+
+      <div class="panel" id="studentRegisterPanel" style="display:none;">
+        <h2 class="form-title">Student registration</h2>
+        <p class="form-sub">Faculty will see your details on their roster once you register.</p>
+        <div class="error-msg" id="studentRegError">That email is already registered — try logging in instead.</div>
+        <form onsubmit="handleStudentRegister(event)">
+          <div class="field">
+            <label for="rName">Full name</label>
+            <input type="text" id="rName" required>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="rClass">Class / Grade</label>
+              <select id="rClass" required>
+                <option value="">Select</option>
+                <option>Grade 1</option><option>Grade 2</option><option>Grade 3</option>
+                <option>Grade 4</option><option>Grade 5</option><option>Grade 6</option>
+                <option>Grade 7</option><option>Grade 8</option><option>Grade 9</option>
+                <option>Grade 10</option><option>Grade 11</option><option>Grade 12</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="rRoll">Roll number</label>
+              <input type="text" id="rRoll" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="rPhone">Parent's phone</label>
+            <input type="tel" id="rPhone" required>
+          </div>
+          <div class="field">
+            <label for="rEmail">Email</label>
+            <input type="email" id="rEmail" required>
+          </div>
+          <div class="field">
+            <label for="rPass">Create a password</label>
+            <input type="password" id="rPass" required minlength="4">
+          </div>
+          <button type="submit" class="btn-primary">Register &amp; log in</button>
+        </form>
+        <div class="switch-link">Already registered? <button onclick="toggleStudentView('login')">Log in instead</button></div>
+      </div>
+    </div>
+
+    <!-- FACULTY TAB -->
+    <div class="tab-panel" id="tabFaculty">
+      <div class="panel">
+        <h2 class="form-title">Faculty login</h2>
+        <p class="form-sub">For teaching staff to view and update the student roster.</p>
+        <div class="error-msg" id="facultyLoginError">Incorrect username or password.</div>
+        <form onsubmit="handleFacultyLogin(event)">
+          <div class="field">
+            <label for="fUser">Username</label>
+            <input type="text" id="fUser" required>
+          </div>
+          <div class="field">
+            <label for="fPass">Password</label>
+            <input type="password" id="fPass" required>
+          </div>
+          <button type="submit" class="btn-primary">Log in</button>
+        </form>
+        <div class="hint">Demo faculty login — username: <strong>faculty</strong>, password: <strong>faculty123</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STUDENT DASHBOARD -->
+  <div id="studentDashboard" style="display:none;">
+    <div class="dash-header">
+      <div>
+        <h2>My details</h2>
+        <div class="who" id="studentWho"></div>
+      </div>
+      <button class="logout-btn" onclick="logout('student')">Log out</button>
+    </div>
+    <div class="detail-card" id="studentDetailCard"></div>
+    <p class="detail-note">To correct any of these details, contact the academy office — students can't edit their own record here; only faculty can.</p>
+  </div>
+
+  <!-- FACULTY DASHBOARD -->
+  <div id="facultyDashboard" style="display:none;">
+    <div class="dash-header">
+      <div>
+        <h2>Student roster</h2>
+        <div class="who">All registered students, in the order they registered</div>
+      </div>
+      <button class="logout-btn" onclick="logout('faculty')">Log out</button>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Class</th>
+            <th>Roll no.</th>
+            <th>Parent phone</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="rosterBody"></tbody>
+      </table>
+    </div>
+    <div class="empty-state" id="rosterEmpty" style="display:none;">No students have registered yet.</div>
+  </div>
+
+  <!-- REGISTRATION IMAGE / WHATSAPP MODAL -->
+  <div class="modal-overlay" id="regNotifyModal">
+    <div class="modal-box">
+      <h3 style="margin-bottom:10px;">Registration image</h3>
+      <img id="regImagePreview" alt="Student registration details card">
+      <div class="modal-actions">
+        <button class="btn-whatsapp" onclick="shareRegImageToWhatsApp()">Send via WhatsApp</button>
+        <button class="btn-outline" onclick="downloadRegImage()">Download image</button>
+        <button class="btn-outline" onclick="closeRegNotify()">Continue</button>
+      </div>
+      <p class="modal-note">On a phone, "Send via WhatsApp" opens your share sheet — pick WhatsApp and the chat to send it to. On a computer, it downloads the image and opens WhatsApp Web so you can attach it there.</p>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  const STUDENTS_KEY = 'tvr_students';
+  const FACULTY = { username: 'faculty', password: 'faculty123' };
+  // TODO: replace with the WhatsApp number that should receive registration images,
+  // in international format, digits only, no + or spaces (e.g. 91 followed by a 10-digit Indian number).
+  const OWNER_WHATSAPP = '911234567890';
+  const CLASS_OPTIONS = ['Grade 1','Grade 2','Grade 3','Grade 4','Grade 5','Grade 6','Grade 7','Grade 8','Grade 9','Grade 10','Grade 11','Grade 12'];
+
+  function loadStudents(){
+    return JSON.parse(localStorage.getItem(STUDENTS_KEY) || '[]');
+  }
+  function saveStudents(list){
+    localStorage.setItem(STUDENTS_KEY, JSON.stringify(list));
+  }
+  function seedIfEmpty(){
+    if(loadStudents().length === 0){
+      saveStudents([
+        {id:1, name:'Ananya Sharma', className:'Grade 8', rollNo:'A08-12', phone:'9876500001', email:'ananya.sharma@example.com', password:'demo123'},
+        {id:2, name:'Rohan Iyer', className:'Grade 10', rollNo:'A10-05', phone:'9876500002', email:'rohan.iyer@example.com', password:'demo123'},
+        {id:3, name:'Meera Nair', className:'Grade 5', rollNo:'A05-19', phone:'9876500003', email:'meera.nair@example.com', password:'demo123'}
+      ]);
+    }
+  }
+  seedIfEmpty();
+
+  // ---- Tabs ----
+  function showTab(which){
+    document.getElementById('tabBtnStudent').classList.toggle('active', which==='student');
+    document.getElementById('tabBtnFaculty').classList.toggle('active', which==='faculty');
+    document.getElementById('tabStudent').classList.toggle('active', which==='student');
+    document.getElementById('tabFaculty').classList.toggle('active', which==='faculty');
+  }
+  function toggleStudentView(which){
+    document.getElementById('studentLoginPanel').style.display = which==='login' ? 'block':'none';
+    document.getElementById('studentRegisterPanel').style.display = which==='register' ? 'block':'none';
+    document.getElementById('studentLoginError').style.display = 'none';
+    document.getElementById('studentRegError').style.display = 'none';
+  }
+
+  // ---- Student auth ----
+  function handleStudentLogin(e){
+    e.preventDefault();
+    const email = document.getElementById('sLoginEmail').value.trim().toLowerCase();
+    const pass = document.getElementById('sLoginPass').value;
+    const student = loadStudents().find(s => s.email.toLowerCase()===email && s.password===pass);
+    if(!student){
+      document.getElementById('studentLoginError').style.display = 'block';
+      return;
+    }
+    enterStudentDashboard(student);
+  }
+
+  function handleStudentRegister(e){
+    e.preventDefault();
+    const email = document.getElementById('rEmail').value.trim().toLowerCase();
+    const list = loadStudents();
+    if(list.some(s => s.email.toLowerCase()===email)){
+      document.getElementById('studentRegError').style.display = 'block';
+      return;
+    }
+    const newStudent = {
+      id: Date.now(),
+      name: document.getElementById('rName').value.trim(),
+      className: document.getElementById('rClass').value,
+      rollNo: document.getElementById('rRoll').value.trim(),
+      phone: document.getElementById('rPhone').value.trim(),
+      email: document.getElementById('rEmail').value.trim(),
+      password: document.getElementById('rPass').value
+    };
+    list.push(newStudent);
+    saveStudents(list);
+    showRegNotify(newStudent, true);
+  }
+
+  function enterStudentDashboard(student){
+    document.getElementById('portalShell').style.display = 'none';
+    document.getElementById('studentDashboard').style.display = 'block';
+    document.getElementById('studentWho').textContent = student.email;
+    document.getElementById('studentDetailCard').innerHTML = `
+      <div class="detail-row"><span class="k">Name</span><span class="v">${escapeHtml(student.name)}</span></div>
+      <div class="detail-row"><span class="k">Class</span><span class="v">${escapeHtml(student.className)}</span></div>
+      <div class="detail-row"><span class="k">Roll number</span><span class="v">${escapeHtml(student.rollNo)}</span></div>
+      <div class="detail-row"><span class="k">Parent's phone</span><span class="v">${escapeHtml(student.phone)}</span></div>
+      <div class="detail-row"><span class="k">Email</span><span class="v">${escapeHtml(student.email)}</span></div>
+    `;
+    sessionStorage.setItem('tvr_session', JSON.stringify({role:'student', id:student.id}));
+  }
+
+  // ---- Registration image + WhatsApp sharing ----
+  let lastRegImageDataUrl = null;
+  let pendingStudentForDashboard = null;
+
+  function generateStudentImage(student){
+    const canvas = document.createElement('canvas');
+    canvas.width = 720;
+    canvas.height = 480;
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#F1ECE0';
+    ctx.fillRect(0, 0, 720, 480);
+
+    ctx.fillStyle = '#1C2B39';
+    ctx.fillRect(0, 0, 720, 90);
+    ctx.fillStyle = '#F1ECE0';
+    ctx.font = '600 26px Georgia, serif';
+    ctx.fillText("TVR's Academy", 32, 42);
+    ctx.fillStyle = '#C9BFA8';
+    ctx.font = '400 14px Arial, sans-serif';
+    ctx.fillText('Student registration details', 32, 66);
+
+    ctx.fillStyle = '#B8863C';
+    ctx.fillRect(0, 90, 720, 4);
+
+    const fields = [
+      ['Name', student.name],
+      ['Class', student.className],
+      ['Roll number', student.rollNo],
+      ["Parent's phone", student.phone],
+      ['Email', student.email],
+      ['Registered on', new Date().toLocaleString()]
+    ];
+    let y = 145;
+    fields.forEach(function(pair){
+      ctx.fillStyle = '#3D5A73';
+      ctx.font = '600 13px Arial, sans-serif';
+      ctx.fillText(pair[0].toUpperCase(), 32, y);
+      ctx.fillStyle = '#2A2620';
+      ctx.font = '400 21px Georgia, serif';
+      ctx.fillText(String(pair[1] || '-'), 32, y + 28);
+      y += 55;
+    });
+
+    ctx.strokeStyle = '#C9BFA8';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(10, 10, 700, 460);
+
+    return canvas.toDataURL('image/png');
+  }
+
+  function dataURLtoBlob(dataUrl){
+    const parts = dataUrl.split(',');
+    const mime = parts[0].match(/:(.*?);/)[1];
+    const binary = atob(parts[1]);
+    let len = binary.length;
+    const bytes = new Uint8Array(len);
+    while(len--){ bytes[len] = binary.charCodeAt(len); }
+    return new Blob([bytes], {type: mime});
+  }
+
+  function showRegNotify(student, enterDashboardAfter){
+    pendingStudentForDashboard = enterDashboardAfter ? student : null;
+    lastRegImageDataUrl = generateStudentImage(student);
+    document.getElementById('regImagePreview').src = lastRegImageDataUrl;
+    document.getElementById('regNotifyModal').style.display = 'flex';
+  }
+
+  function closeRegNotify(){
+    document.getElementById('regNotifyModal').style.display = 'none';
+    if(pendingStudentForDashboard){
+      enterStudentDashboard(pendingStudentForDashboard);
+      pendingStudentForDashboard = null;
+    }
+  }
+
+  function downloadRegImage(){
+    if(!lastRegImageDataUrl) return;
+    const a = document.createElement('a');
+    a.href = lastRegImageDataUrl;
+    a.download = 'student-registration.png';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  async function shareRegImageToWhatsApp(){
+    if(!lastRegImageDataUrl) return;
+    const blob = dataURLtoBlob(lastRegImageDataUrl);
+    const file = new File([blob], 'student-registration.png', {type:'image/png'});
+
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      try{
+        await navigator.share({
+          files: [file],
+          title: "New student registration — TVR's Academy",
+          text: 'Student registration details attached.'
+        });
+        return;
+      }catch(err){
+        // user cancelled the share sheet — fall through to the link fallback below
+      }
+    }
+    // Fallback for browsers/desktops that can't share files directly:
+    // download the image, then open WhatsApp with a text prompt to attach it.
+    downloadRegImage();
+    const msg = encodeURIComponent("New student registration at TVR's Academy — image downloaded, please attach it here.");
+    window.open('https://wa.me/' + OWNER_WHATSAPP + '?text=' + msg, '_blank');
+  }
+
+  function notifyExistingStudent(id){
+    const student = loadStudents().find(function(s){ return s.id === id; });
+    if(!student) return;
+    showRegNotify(student, false);
+  }
+
+  // ---- Faculty auth ----
+  function handleFacultyLogin(e){
+    e.preventDefault();
+    const user = document.getElementById('fUser').value.trim();
+    const pass = document.getElementById('fPass').value;
+    if(user !== FACULTY.username || pass !== FACULTY.password){
+      document.getElementById('facultyLoginError').style.display = 'block';
+      return;
+    }
+    document.getElementById('facultyLoginError').style.display = 'none';
+    enterFacultyDashboard();
+  }
+
+  function enterFacultyDashboard(){
+    document.getElementById('portalShell').style.display = 'none';
+    document.getElementById('facultyDashboard').style.display = 'block';
+    sessionStorage.setItem('tvr_session', JSON.stringify({role:'faculty'}));
+    renderRoster();
+  }
+
+  // ---- Faculty roster: view / edit / delete ----
+  let editingId = null;
+
+  function renderRoster(){
+    const list = loadStudents();
+    const body = document.getElementById('rosterBody');
+    const empty = document.getElementById('rosterEmpty');
+    body.innerHTML = '';
+    if(list.length === 0){
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    list.forEach((s, index) => {
+      const tr = document.createElement('tr');
+      if(s.id === editingId){
+        tr.innerHTML = `
+          <td class="serial">${index+1}</td>
+          <td><input type="text" value="${escapeAttr(s.name)}" data-field="name"></td>
+          <td><select data-field="className">${CLASS_OPTIONS.map(c => `<option ${c===s.className?'selected':''}>${c}</option>`).join('')}</select></td>
+          <td><input type="text" value="${escapeAttr(s.rollNo)}" data-field="rollNo"></td>
+          <td><input type="tel" value="${escapeAttr(s.phone)}" data-field="phone"></td>
+          <td><input type="email" value="${escapeAttr(s.email)}" data-field="email"></td>
+          <td class="row-actions">
+            <button class="icon-btn save" onclick="saveEdit(${s.id})">Save</button>
+            <button class="icon-btn" onclick="cancelEdit()">Cancel</button>
+          </td>
+        `;
+      } else {
+        tr.innerHTML = `
+          <td class="serial">${index+1}</td>
+          <td>${escapeHtml(s.name)}</td>
+          <td>${escapeHtml(s.className)}</td>
+          <td>${escapeHtml(s.rollNo)}</td>
+          <td>${escapeHtml(s.phone)}</td>
+          <td>${escapeHtml(s.email)}</td>
+          <td class="row-actions">
+            <button class="icon-btn" onclick="startEdit(${s.id})">Edit</button>
+            <button class="icon-btn" onclick="notifyExistingStudent(${s.id})">WhatsApp</button>
+            <button class="icon-btn delete" onclick="deleteStudent(${s.id})">Delete</button>
+          </td>
+        `;
+      }
+      body.appendChild(tr);
+    });
+  }
+
+  function startEdit(id){
+    editingId = id;
+    renderRoster();
+  }
+  function cancelEdit(){
+    editingId = null;
+    renderRoster();
+  }
+  function saveEdit(id){
+    const list = loadStudents();
+    const idx = list.findIndex(s => s.id === id);
+    if(idx === -1) return;
+    const row = document.querySelectorAll('#rosterBody tr')[idx];
+    row.querySelectorAll('[data-field]').forEach(input => {
+      list[idx][input.dataset.field] = input.value.trim();
+    });
+    saveStudents(list);
+    editingId = null;
+    renderRoster();
+  }
+  function deleteStudent(id){
+    if(!confirm('Remove this student from the roster?')) return;
+    const list = loadStudents().filter(s => s.id !== id);
+    saveStudents(list);
+    renderRoster();
+  }
+
+  // ---- Logout ----
+  function logout(role){
+    sessionStorage.removeItem('tvr_session');
+    if(role === 'student'){
+      document.getElementById('studentDashboard').style.display = 'none';
+      toggleStudentView('login');
+      document.getElementById('sLoginEmail').value = '';
+      document.getElementById('sLoginPass').value = '';
+    } else {
+      document.getElementById('facultyDashboard').style.display = 'none';
+      document.getElementById('fUser').value = '';
+      document.getElementById('fPass').value = '';
+    }
+    document.getElementById('portalShell').style.display = 'block';
+    showTab('student');
+  }
+
+  // ---- Helpers ----
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+  function escapeAttr(str){ return escapeHtml(str); }
+</script>
+
+</body>
+</html>
